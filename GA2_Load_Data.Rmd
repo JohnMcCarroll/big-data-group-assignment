@@ -48,6 +48,8 @@ colnames(tab2) <- cols2
 tab2 <- tab2[-1,]
 tab2rem <- cleanvals(tab2)
 tab2 <- tab2[-tab2rem,]
+tab2 <- na.omit(tab2)
+
 
 #load table 2
 tab3 <- read.xlsx("data//table-3.xlsx", 1, header = TRUE)
@@ -63,6 +65,10 @@ tab3 <- tab3[-1:-2,]
 tab3[1,1] <- "\t Total"
 tab3rem <- cleanvals(tab3)
 tab3 <- tab3[-tab3rem,]
+
+
+
+tab3[tab3 =='Z'] <- 0
 
 ```
 
@@ -85,7 +91,10 @@ dbDisconnect(mydb)
 You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
-plot(pressure)
+
+
+
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
