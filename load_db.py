@@ -2,6 +2,26 @@ import sqlite3
 import pandas as pd
 import os
 
+def clean_3(df3):
+    # clean formatting for table 3
+    df_cleaned = df3.replace('', pd.NA).dropna()
+    df_cleaned = df_cleaned.replace(['Z', r'^\s*$'], 0, regex=True)
+    # fix col names
+    column_names3 = ['educ_attainment',
+                     "allpeople_number", "allpeople_percent",
+                     "male_number", "male_percent",
+                     "female_number", "female_percent",
+                     "age25_34_number", "age25_34_percent",
+                     "age35_54_number", "age35_54_percent",
+                     "age55plus_number", "age55plus_percent",
+                     "white_number", "white_percent",
+                     "nonhispanicwhite_number", "nonhispanicwhite_percent",
+                     "black_number", "black_percent",
+                     "asian_number", "asian_percent",
+                     "hispanic_number", "hispanic_percent"
+                     ]
+    df_cleaned.columns = column_names3
+    return df_cleaned
 
 if __name__ == "__main__":
     
@@ -14,6 +34,7 @@ if __name__ == "__main__":
     table_name1 = "attain01_2022"
     table_name2 = "attain02_2022"
     table_name3 = "attain03_2022"
+    table_name3clean = "attain03_2022_clean"
 
     # Get the absolute path of the current file
     current_file_path = os.path.abspath(__file__)
@@ -32,6 +53,9 @@ if __name__ == "__main__":
     df.to_sql(table_name2, conn, if_exists='replace', index=False)
     df = pd.read_excel(table3_full_path)
     df.to_sql(table_name3, conn, if_exists='replace', index=False)
+    # new table
+    df = clean_3(df)
+    df.to_sql(table_name3clean, conn, if_exists='replace', index=False)
 
     # Commit the changes
     conn.commit()
