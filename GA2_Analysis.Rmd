@@ -11,6 +11,8 @@ library(dplyr)
 library(ggplot2)
 library(xlsx)
 library(data.table)
+library(DBI)
+library(RSQLite)
 ```
 
 ## R Markdown
@@ -21,18 +23,22 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r data_clean}
 
-workDat <- read.csv("table-2.csv")
-workDat <- workDat[(-1:-4),]
-colnames(workDat) <- as.character(unlist(workDat[1,]))
-workDat <- workDat[-1,]
-workDat <- workDat[(-65:-74),]
+db_name <- 'educational_attainment_database.db'
+mydb <- dbConnect(RSQLite::SQLite(), db_name)
 
-lfDat <- read.xlsx("empDat.xlsx", 1, header = TRUE)
+lfDat <- dbGetQuery(mydb, 'SELECT * FROM TABLE_2')
+dbDisconnect(mydb)
 str(lfDat)
 colnames(lfDat) <- c('Characteristics', 'Total', 'None', '11th', 'HSGrad', 'SomeCollege', 'Associates', 'Bachelors', 'Masters', 'Professional', 'Doctoral')
 
+grps <- lfDat[,1]
+lfDat <- lfDat[,-1]
+lfDat <- mutate_all(lfDat, function(x) as.numeric(as.character(x)))
+lfDat <- cbind(grps, lfDat)
 lfDat$noHS <- rowSums(lfDat[,3:4])
 lfDat$HS <- rowSums(lfDat[,5:6])
+
+lfDat <- lfDat[30:32,]
 
 n <- colnames(lfDat)[-1]
 
