@@ -31,10 +31,6 @@ dbDisconnect(mydb)
 str(lfDat)
 colnames(lfDat) <- c('Characteristics', 'Total', 'None', '11th', 'HSGrad', 'SomeCollege', 'Associates', 'Bachelors', 'Masters', 'Professional', 'Doctoral')
 
-grps <- lfDat[,1]
-lfDat <- lfDat[,-1]
-lfDat <- mutate_all(lfDat, function(x) as.numeric(as.character(x)))
-lfDat <- cbind(grps, lfDat)
 lfDat$noHS <- rowSums(lfDat[,3:4])
 lfDat$HS <- rowSums(lfDat[,5:6])
 
@@ -45,7 +41,7 @@ n <- colnames(lfDat)[-1]
 
 lfTrans <- transpose(lfDat[,-1])
 rownames(lfTrans) <- n
-cn <- c('Employed', 'Unemployed', 'NonCivLForce')
+cn <- c('Unemployed', 'NonCivLForce', 'Employed')
 
 colnames(lfTrans) <- cn
 
@@ -78,7 +74,8 @@ You can also embed plots, for example:
 
 ```{r visualization}
 lfClean$EdAttain <= factor(lfClean$EdAttain, levels = c('noHS', "HS", 'Associates', 'Bachelors', 'Masters', 'Professional', 'Doctoral'), ordered = TRUE)
-lfPlot <- ggplot(lfClean, aes(fill = LFStatus, y = Percent, x = EdAttain)) +
+lfClean$LFStatus <= factor(lfClean$LFStatus, levels = c('Employed', 'Not in civilian labor force', 'Unemployed'), ordered = TRUE)
+lfPlot <- ggplot(lfClean, aes(fill = LFStatus, y = Percent, x = EdAttain, group = LFStatus)) +
   geom_bar(position = "dodge", stat = "identity") +
   scale_x_discrete(limits=c('noHS', "HS", 'Associates', 'Bachelors', 'Masters', 'Professional', 'Doctoral')) +
   xlab("Educational Attainment") + 
