@@ -7,24 +7,20 @@ import matplotlib.ticker as mticker
 db_name = 'educational_attainment_database.db'
 conn = sqlite3.connect(db_name)
 cursor = conn.cursor()
-table_names = [
-    'attain02_2022', 
-]
+table2_name = 'attain02_2022'
 
-# Remove first four rows from each table
-for table_name in table_names:
-    delete_query = f"""
-    DELETE FROM {table_name} 
-    WHERE rowid IN (
-        SELECT rowid FROM {table_name}
-        ORDER BY rowid ASC
-        LIMIT 4
-    );
-    """
-    cursor.execute(delete_query)
-    print(f"Removed first 4 rows from {table_name}")
+# Remove first four rows of the table
+delete_query = f"""
+DELETE FROM {table2_name} 
+WHERE rowid IN (
+    SELECT rowid FROM {table2_name}
+    ORDER BY rowid ASC
+    LIMIT 4
+);
+"""
+cursor.execute(delete_query)
 
-# Query to get dataframe of table
+# Query to get dataframe of table 2
 query = f"SELECT * FROM attain02_2022;"
 df2 = pd.read_sql_query(query, conn)
 
@@ -56,6 +52,6 @@ ax.set_title('Educational Attainment vs Occupation')
 ax.set_xlabel('Occupation')
 # Clean x labels
 ax.set_xticklabels([label.get_text().strip() for label in ax.get_xticklabels()], rotation=45, ha='right', fontsize=8)
-ax.legend(title='Educational Attainment', bbox_to_anchor=(1.05, 1), loc='upper left')
+ax.legend(title='Educational Attainment', bbox_to_anchor=(1, 1), loc='upper left')
 plt.tight_layout()
 plt.savefig('educational_attainment_vs_occupation.png', format='png', dpi=300, bbox_inches='tight')

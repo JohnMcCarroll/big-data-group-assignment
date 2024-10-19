@@ -15,7 +15,7 @@ if __name__ == "__main__":
     table_name2 = "attain02_2022"
     table_name3 = "attain03_2022"
 
-    # Get the absolute path of the current file
+    # Get full paths to excel files
     current_file_path = os.path.abspath(__file__)
     root_folder = os.path.dirname(current_file_path)
     table1_full_path = os.path.join(root_folder, table1_path)
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     # Commit the changes
     conn.commit()
 
-    # Query to retrieve the names of all tables in the database
+    # Query to retrieve the names of all tables in database
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
     tables = cursor.fetchall()
