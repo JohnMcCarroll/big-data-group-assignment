@@ -1,0 +1,127 @@
+---
+title: "GA2_Data_Load"
+author: "Willow Rose"
+date: "2024-10-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+library(dplyr)
+
+library(DBI)
+library(RSQLite)
+library(xlsx)
+
+cleanvals <- function(tab) {
+  rem <- vector(mode='list', length=length(tab[,1]))
+  for(x in (1:length(tab[,1]))) {
+    if(substring(tab[x,1], 1, 1) != '\t') {
+      rem[[x]] <- x
+    }
+  }
+  return(unlist(rem))
+}
+
+tabremove <- function(tab) {
+  for(x in (1:length(tab))) {
+    tab[x] <- gsub('[\t]', '', tab[x])
+    tab[x] <- sub('.', '', tab[x])
+  }
+  return(tab)
+}
+```
+
+```{r read_data}
+
+
+#load table 2
+tab1 <- read.xlsx("data//table-1-1.xlsx", 1, header = TRUE)
+tab1 <- tab1[(-1:-4),]
+cols1 <- tab1[1,]
+cols1[1] = "Group"
+colnames(tab1) <- cols1
+tab1 <- tab1[-1,]
+tab1rem <- cleanvals(tab1)
+tab1 <- tab1[-tab1rem,]
+grps1 <- tab1[,1]
+tab1 <- tab1[,-1]
+tab1 <- mutate_all(tab1, function(x) as.numeric(as.character(x)))
+grps1 <- tabremove(grps1)
+tab1 <- cbind(grps1, tab1)
+colnames(tab1) <- c('Groups', 'Total', 'None', '1st-4th', '5th-6th', '7th-8th', '9th', '10th', '11th', 'HS_Graduate', 'Some_College', 'Occupational_Associates', 'Academic_Associates', 'Bachelors', 'Masters', 'Professional', 'Doctoral')
+
+
+#load table 2
+tab2 <- read.xlsx("data//table-2-1.xlsx", 1, header = TRUE)
+tab2 <- tab2[(-1:-4),]
+cols2 <- tab2[1,]
+cols2[1] = "Group"
+colnames(tab2) <- cols2
+tab2 <- tab2[-1,]
+tab2rem <- cleanvals(tab2)
+tab2 <- tab2[-tab2rem,]
+tab2 <- na.omit(tab2)
+grps2 <- tab2[,1]
+tab2 <- tab2[,-1]
+tab2 <- mutate_all(tab2, function(x) as.numeric(as.character(x)))
+grps2 <- tabremove(grps2)
+tab2 <- cbind(grps2, tab2)
+colnames(tab2) <- c('Groups', 'Total', 'None-8th', '9th-11th', 'HS_Graduate', 'Some_College', 'Associates', 'Bachelors', 'Masters', 'Professional', 'Doctoral')
+
+#load table 2
+tab3 <- read.xlsx("data//table-3.xlsx", 1, header = TRUE)
+tab3 <- tab3[(-1:-2),]
+cols3 <- tab3[1,]
+for(x in 1:length(cols3)) {
+  if(is.na(cols3[x])) {
+    cols3[x] <- paste(cols3[x-1], '(%)')
+  }
+}
+colnames(tab3) <- cols3
+tab3 <- tab3[-1:-2,]
+tab3[1,1] <- "\t Total"
+tab3rem <- cleanvals(tab3)
+tab3 <- tab3[-tab3rem,]
+tab3[tab3 =='Z'] <- 0
+grps3 <- tab3[,1]
+tab3 <- tab3[,-1]
+tab3 <- mutate_all(tab3, function(x) as.numeric(as.character(x)))
+grps3 <- tabremove(grps3)
+tab3 <- cbind(grps3, tab3)
+colnames(tab3) <- c('Groups', 'All_People', 'All_People(%)', 'Male', 'Male(%)', 'Female', 'Female(%)', '25-34', '25-34(%)', '35-54', '35-54(%)', '55+', '55+(%)', 'White', 'White(%)', 'Non-Hispanic_White', 'Non-Hispanic_White(%)', 'Black', 'Black(%)', 'Asian', 'Asian(%)', 'Hispanic', 'Hispanic(%)')
+
+str(tab1)
+str(tab2)
+str(tab3)
+```
+
+
+```{r load_data}
+db_name <- 'educational_attainment_database_r.db'
+mydb <- dbConnect(RSQLite::SQLite(), db_name)
+dbWriteTable(mydb, "table_1", tab1)
+dbWriteTable(mydb, "table_2", tab2)
+dbWriteTable(mydb, "table_3", tab3)
+dbListTables(mydb)
+dbtab1 <- dbGetQuery(mydb, 'SELECT * FROM TABLE_1')
+dbtab2 <- dbGetQuery(mydb, 'SELECT * FROM TABLE_2')
+dbtab3 <- dbGetQuery(mydb, 'SELECT * FROM TABLE_3')
+dbDisconnect(mydb)
+str(dbtab1)
+str(dbtab2)
+str(dbtab3)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+
+
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
