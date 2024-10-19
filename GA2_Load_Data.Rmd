@@ -98,7 +98,7 @@ str(tab3)
 
 
 ```{r load_data}
-db_name <- 'educational_attainment_database.db'
+db_name <- 'educational_attainment_database_r.db'
 mydb <- dbConnect(RSQLite::SQLite(), db_name)
 dbWriteTable(mydb, "table_1", tab1)
 dbWriteTable(mydb, "table_2", tab2)

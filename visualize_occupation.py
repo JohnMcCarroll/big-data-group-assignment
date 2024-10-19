@@ -18,7 +18,7 @@ WHERE rowid IN (
     LIMIT 4
 );
 """
-cursor.execute(delete_query)
+# cursor.execute(delete_query)
 
 # Query to get dataframe of table 2
 query = f"SELECT * FROM attain02_2022;"

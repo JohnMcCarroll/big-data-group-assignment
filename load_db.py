@@ -30,7 +30,7 @@ if __name__ == "__main__":
     table2_path = "data/table-2-1.xlsx"
     table3_path = "data/table-3.xlsx"
 
-    db_name = 'educational_attainment_database.db'
+    db_name = 'educational_attainment_database_python.db'
     table_name1 = "attain01_2022"
     table_name2 = "attain02_2022"
     table_name3 = "attain03_2022"
