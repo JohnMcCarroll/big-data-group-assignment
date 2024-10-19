@@ -31,10 +31,6 @@ dbDisconnect(mydb)
 str(lfDat)
 colnames(lfDat) <- c('Characteristics', 'Total', 'None', '11th', 'HSGrad', 'SomeCollege', 'Associates', 'Bachelors', 'Masters', 'Professional', 'Doctoral')
 
-grps <- lfDat[,1]
-lfDat <- lfDat[,-1]
-lfDat <- mutate_all(lfDat, function(x) as.numeric(as.character(x)))
-lfDat <- cbind(grps, lfDat)
 lfDat$noHS <- rowSums(lfDat[,3:4])
 lfDat$HS <- rowSums(lfDat[,5:6])
 
