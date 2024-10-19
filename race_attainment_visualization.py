@@ -3,7 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-# todo: actually add in data chunking properly (instead of summing ig)
+"""
+Author: Kilian Jakstis
+Create bar chart for race and educational attainment visualization
+"""
+
+# todo: work on chunking queries
 
 ##### setup
 
@@ -38,9 +43,9 @@ conn = sqlite3.connect(db_name)
 ##### replicating bar chart from assignment 1
 
 # read chunks of data, query
-chunk_size = 1
+chunk_size = 3
 def read_chunks(offset, chunk_size, educ_level, race_value):
-    query = f"SELECT SUM(\"{race_value}\") " \
+    query = f"SELECT \"{race_value}\" " \
             f"FROM {table_name3clean} " \
             f"WHERE {educ_level} " \
             # f"LIMIT {chunk_size} OFFSET {offset}"

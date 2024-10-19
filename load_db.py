@@ -2,6 +2,11 @@ import sqlite3
 import pandas as pd
 import os
 
+"""
+Authors: John McCarroll, Kilian Jakstis
+Clean and load data into SQLite database
+"""
+
 def clean_3(df3):
     # clean formatting for table 3
     df_cleaned = df3.replace('', pd.NA).dropna()
