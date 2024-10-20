@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
 # Connect to database
-db_name = '/home/john/RIT CS Masters/Big Data/big-data-group-assignment/educational_attainment_database_r.db'
+db_name = 'educational_attainment_database.db'
 conn = sqlite3.connect(db_name)
 cursor = conn.cursor()
 
