@@ -56,7 +56,7 @@ for i, race in enumerate(races):
             s += df_chunk.values.flatten().sum()
             offset += chunk
         group_percentages[j] += s
-    ax.bar(x + i * width, group_percentages, width, label=race_labels[i])
+    ax.bar(x + i * width, group_percentages, width, label=race_labels[i].replace('_', ' '))
 
 conn.close()
 
