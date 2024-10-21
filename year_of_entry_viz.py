@@ -61,7 +61,7 @@ for y in educ_levels_by_year:
 
 plt.title('Year vs Educational Attainment of Entrants')
 plt.xlabel('Year')
-plt.ylabel('Number of Entrants')
+plt.ylabel('Number of Entrants (in thousands)')
 plt.xlim(1965, 2025)
 plt.grid(True)
 plt.legend()
